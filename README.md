@@ -1,32 +1,32 @@
-# @jayhack/agent-secrets
+# agent-secret-manager
 
 Agent-native secret requests for local projects.
 
-`@jayhack/agent-secrets` gives coding agents a structured way to ask a human for API keys without pasting values into chat or terminal output. The CLI starts a localhost form, the human enters the value, and the CLI writes it into a local `.env` file with private file permissions. The installed binary is `agent-secrets`.
+`agent-secret-manager` gives coding agents a structured way to ask a human for API keys without pasting values into chat or terminal output. The CLI starts a localhost form, the human enters the value, and the CLI writes it into a local `.env` file with private file permissions.
 
 ## Quick start
 
 ```sh
-npx @jayhack/agent-secrets request OPENAI_API_KEY --reason "Run the local OpenAI example"
+npx agent-secret-manager request OPENAI_API_KEY --reason "Run the local OpenAI example"
 ```
 
 The command prints and opens a localhost URL. After the form is submitted:
 
 - `.env` contains the secret value.
 - `.env.example` contains blank keys for agent-readable setup.
-- `.gitignore` ignores `.env`, `.env.*`, and `.agent-secrets/`.
-- `.agent-secrets/manifest.json` records metadata only, never values.
+- `.gitignore` ignores `.env`, `.env.*`, and `.agent-secret-manager/`.
+- `.agent-secret-manager/manifest.json` records metadata only, never values.
 
 Verify without printing values:
 
 ```sh
-npx @jayhack/agent-secrets check OPENAI_API_KEY
+npx agent-secret-manager check OPENAI_API_KEY
 ```
 
 Run a command with the env file loaded:
 
 ```sh
-npx @jayhack/agent-secrets run -- npm test
+npx agent-secret-manager run -- npm test
 ```
 
 ## Structured requests
@@ -53,31 +53,31 @@ Agents can create a request spec with no secret values:
 Then run:
 
 ```sh
-npx @jayhack/agent-secrets request --from secrets.request.json
+npx agent-secret-manager request --from secrets.request.json
 ```
 
 ## Commands
 
 ```sh
-agent-secrets init [--env .env]
-agent-secrets request <ENV_NAME...> [--reason text] [--env .env]
-agent-secrets request --from secrets.request.json
-agent-secrets check <ENV_NAME...> [--env .env]
-agent-secrets list [--env .env]
-agent-secrets run [--env .env] -- <command>
-agent-secrets spec <ENV_NAME...>
-agent-secrets skill path
-agent-secrets skill install
+agent-secret-manager init [--env .env]
+agent-secret-manager request <ENV_NAME...> [--reason text] [--env .env]
+agent-secret-manager request --from secrets.request.json
+agent-secret-manager check <ENV_NAME...> [--env .env]
+agent-secret-manager list [--env .env]
+agent-secret-manager run [--env .env] -- <command>
+agent-secret-manager spec <ENV_NAME...>
+agent-secret-manager skill path
+agent-secret-manager skill install
 ```
 
 ## Skill distribution
 
-The package includes a Codex skill in `skills/agent-secrets`.
+The package includes a Codex skill in `skills/agent-secret-manager`.
 
 Install it from an npm install:
 
 ```sh
-npx @jayhack/agent-secrets skill install
+npx agent-secret-manager skill install
 ```
 
 The skill tells agents to request missing secrets through this CLI, verify only presence, and avoid opening or printing the `.env` contents.

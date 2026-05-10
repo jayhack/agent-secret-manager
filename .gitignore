@@ -2,7 +2,7 @@
 node_modules/
 
 # local secrets
-.agent-secrets/
+.agent-secret-manager/
 .env
 .env.*
 !.env.example

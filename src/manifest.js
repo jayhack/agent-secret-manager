@@ -3,7 +3,7 @@ import path from "node:path";
 import { chmodPrivate, pathExists } from "./env-file.js";
 
 export function manifestPath(cwd) {
-  return path.join(cwd, ".agent-secrets", "manifest.json");
+  return path.join(cwd, ".agent-secret-manager", "manifest.json");
 }
 
 export async function readManifest(cwd) {

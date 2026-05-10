@@ -12,7 +12,7 @@ test("quoteEnvValue round-trips through parseEnvFileContent", () => {
 });
 
 test("upsertEnvValues updates existing keys and appends missing keys", async () => {
-  const dir = await mkdtemp(path.join(os.tmpdir(), "agent-secrets-"));
+  const dir = await mkdtemp(path.join(os.tmpdir(), "agent-secret-manager-"));
   const envPath = path.join(dir, ".env");
   await upsertEnvValues(envPath, {
     OPENAI_API_KEY: "first",
@@ -36,7 +36,7 @@ test("upsertEnvValues updates existing keys and appends missing keys", async () 
 });
 
 test("updateEnvExample adds blank keys without secret values", async () => {
-  const dir = await mkdtemp(path.join(os.tmpdir(), "agent-secrets-"));
+  const dir = await mkdtemp(path.join(os.tmpdir(), "agent-secret-manager-"));
   const examplePath = path.join(dir, ".env.example");
   await updateEnvExample(examplePath, [
     { name: "OPENAI_API_KEY" },

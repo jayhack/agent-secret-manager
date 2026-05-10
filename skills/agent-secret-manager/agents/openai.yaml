@@ -1,0 +1,4 @@
+interface:
+  display_name: "Agent Secret Manager"
+  short_description: "Request local secrets without exposing values"
+  default_prompt: "Use $agent-secret-manager to request missing API keys without printing or reading secret values."

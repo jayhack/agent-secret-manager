@@ -1,14 +1,14 @@
 {
-  "name": "@jayhack/agent-secrets",
+  "name": "agent-secret-manager",
   "version": "0.1.0",
   "description": "Agent-native local secret request CLI and bundled Codex skill.",
   "type": "module",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/jayhack/agent-secrets.git"
+    "url": "git+https://github.com/jayhack/agent-secret-manager.git"
   },
   "bin": {
-    "agent-secrets": "./bin/agent-secrets.js"
+    "agent-secret-manager": "./bin/agent-secret-manager.js"
   },
   "files": [
     "bin",
@@ -18,7 +18,7 @@
     "LICENSE"
   ],
   "scripts": {
-    "check": "node --check bin/agent-secrets.js && node --check src/cli.js && node --check src/env-file.js && node --check src/html.js && node --check src/manifest.js && node --check src/server.js",
+    "check": "node --check bin/agent-secret-manager.js && node --check src/cli.js && node --check src/env-file.js && node --check src/html.js && node --check src/manifest.js && node --check src/server.js",
     "test": "node --test"
   },
   "keywords": [

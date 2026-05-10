@@ -120,7 +120,7 @@ export async function upsertEnvValues(filePath, updates) {
     assertEnvName(key);
   }
 
-  await ensurePrivateFile(filePath, "# Created by agent-secrets. Values are local-only; do not commit.\n");
+  await ensurePrivateFile(filePath, "# Created by agent-secret-manager. Values are local-only; do not commit.\n");
   const original = await fs.readFile(filePath, "utf8");
   const lines = original.replace(/\r\n/g, "\n").split("\n");
   if (lines.length > 0 && lines[lines.length - 1] === "") {
@@ -145,7 +145,7 @@ export async function upsertEnvValues(filePath, updates) {
     if (lines.length > 0 && lines[lines.length - 1].trim() !== "") {
       lines.push("");
     }
-    lines.push("# agent-secrets managed values");
+    lines.push("# agent-secret-manager managed values");
     for (const [key, value] of missing) {
       lines.push(`${key}=${quoteEnvValue(value)}`);
       updated.add(key);
@@ -160,8 +160,8 @@ export async function upsertEnvValues(filePath, updates) {
 export async function ensureGitignore(cwd) {
   const filePath = path.join(cwd, ".gitignore");
   const desired = [
-    "# agent-secrets",
-    ".agent-secrets/",
+    "# agent-secret-manager",
+    ".agent-secret-manager/",
     ".env",
     ".env.*",
     "!.env.example"
@@ -203,7 +203,7 @@ export async function updateEnvExample(examplePath, secrets) {
   if (content.trim()) {
     lines.push("");
   }
-  lines.push("# Added by agent-secrets for agent-readable configuration");
+  lines.push("# Added by agent-secret-manager for agent-readable configuration");
   for (const secret of missing) {
     lines.push(`${secret.name}=`);
   }
@@ -214,8 +214,8 @@ export async function updateEnvExample(examplePath, secrets) {
 
 export async function ensureSecretProject(cwd, envFile = ".env", exampleFile = ".env.example") {
   await ensureGitignore(cwd);
-  await ensurePrivateFile(resolveProjectPath(cwd, envFile), "# Created by agent-secrets. Values are local-only; do not commit.\n");
-  await fs.mkdir(path.join(cwd, ".agent-secrets"), { recursive: true, mode: 0o700 });
-  await ensurePrivateFile(path.join(cwd, ".agent-secrets", "manifest.json"), "{\n  \"version\": 1,\n  \"secrets\": {}\n}\n");
+  await ensurePrivateFile(resolveProjectPath(cwd, envFile), "# Created by agent-secret-manager. Values are local-only; do not commit.\n");
+  await fs.mkdir(path.join(cwd, ".agent-secret-manager"), { recursive: true, mode: 0o700 });
+  await ensurePrivateFile(path.join(cwd, ".agent-secret-manager", "manifest.json"), "{\n  \"version\": 1,\n  \"secrets\": {}\n}\n");
   await updateEnvExample(resolveProjectPath(cwd, exampleFile), []);
 }

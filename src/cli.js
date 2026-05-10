@@ -8,20 +8,22 @@ import { readManifest } from "./manifest.js";
 import { runSecretRequestServer } from "./server.js";
 
 const PACKAGE_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
-const NPX_COMMAND = "npx @jayhack/agent-secrets";
+const COMMAND_NAME = "agent-secret-manager";
+const SKILL_NAME = "agent-secret-manager";
+const NPX_COMMAND = "npx agent-secret-manager";
 
 function printHelp() {
-  console.log(`agent-secrets
+  console.log(`${COMMAND_NAME}
 
 Usage:
-  agent-secrets request <ENV_NAME...> [--reason text] [--env .env]
-  agent-secrets request --from secrets.request.json
-  agent-secrets check <ENV_NAME...> [--env .env]
-  agent-secrets list [--env .env]
-  agent-secrets run [--env .env] -- <command>
-  agent-secrets init [--env .env]
-  agent-secrets skill path
-  agent-secrets skill install [--codex-home ~/.codex]
+  ${COMMAND_NAME} request <ENV_NAME...> [--reason text] [--env .env]
+  ${COMMAND_NAME} request --from secrets.request.json
+  ${COMMAND_NAME} check <ENV_NAME...> [--env .env]
+  ${COMMAND_NAME} list [--env .env]
+  ${COMMAND_NAME} run [--env .env] -- <command>
+  ${COMMAND_NAME} init [--env .env]
+  ${COMMAND_NAME} skill path
+  ${COMMAND_NAME} skill install [--codex-home ~/.codex]
 
 Common request options:
   --title <text>       Browser page title
@@ -157,7 +159,7 @@ async function requestCommand(args) {
   const timeoutSeconds = Number(options.timeout ?? 900);
   const openBrowser = options.open !== false;
 
-  console.log("agent-secrets request");
+  console.log(`${COMMAND_NAME} request`);
   console.log(`Env file: ${resolveProjectPath(cwd, spec.envFile)}`);
   console.log(`Secrets: ${spec.secrets.map((secret) => secret.name).join(", ")}`);
 
@@ -181,7 +183,7 @@ async function initCommand(args) {
   const cwd = process.cwd();
   const options = parseOptions(args);
   await ensureSecretProject(cwd, options.env || ".env", options.example || ".env.example");
-  console.log(`Initialized agent-secrets in ${cwd}`);
+  console.log(`Initialized ${COMMAND_NAME} in ${cwd}`);
   console.log(`Env file: ${resolveProjectPath(cwd, options.env || ".env")}`);
 }
 
@@ -234,7 +236,7 @@ async function listCommand(args) {
 async function runCommand(args) {
   const separator = args.indexOf("--");
   if (separator === -1) {
-    throw new Error("Use `agent-secrets run [--env .env] -- <command>`.");
+    throw new Error(`Use \`${COMMAND_NAME} run [--env .env] -- <command>\`.`);
   }
 
   const options = parseOptions(args.slice(0, separator));
@@ -264,7 +266,7 @@ async function runCommand(args) {
 
 async function skillCommand(args) {
   const [subcommand, ...rest] = args;
-  const skillPath = path.join(PACKAGE_ROOT, "skills", "agent-secrets");
+  const skillPath = path.join(PACKAGE_ROOT, "skills", SKILL_NAME);
 
   if (subcommand === "path" || !subcommand) {
     console.log(skillPath);
@@ -279,7 +281,7 @@ async function skillCommand(args) {
   const codexHome = options.codexHome
     ? path.resolve(String(options.codexHome))
     : process.env.CODEX_HOME || path.join(os.homedir(), ".codex");
-  const target = path.join(codexHome, "skills", "agent-secrets");
+  const target = path.join(codexHome, "skills", SKILL_NAME);
 
   try {
     await fs.access(target);
@@ -326,5 +328,5 @@ export async function main(argv) {
   if (command === "skill") return skillCommand(args);
   if (command === "spec") return specCommand(args);
 
-  throw new Error(`Unknown command "${command}". Run agent-secrets --help.`);
+  throw new Error(`Unknown command "${command}". Run ${COMMAND_NAME} --help.`);
 }
