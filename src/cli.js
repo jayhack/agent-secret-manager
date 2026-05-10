@@ -8,6 +8,7 @@ import { readManifest } from "./manifest.js";
 import { runSecretRequestServer } from "./server.js";
 
 const PACKAGE_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
+const NPX_COMMAND = "npx @jayhack/agent-secrets";
 
 function printHelp() {
   console.log(`agent-secrets
@@ -173,7 +174,7 @@ async function requestCommand(args) {
 
   const names = result.savedNames.length ? result.savedNames : spec.secrets.map((secret) => secret.name);
   console.log(`Saved: ${names.join(", ")}`);
-  console.log("Next: run `agent-secrets check " + spec.secrets.map((secret) => secret.name).join(" ") + "` to verify presence without printing values.");
+  console.log("Next: run `" + NPX_COMMAND + " check " + spec.secrets.map((secret) => secret.name).join(" ") + "` to verify presence without printing values.");
 }
 
 async function initCommand(args) {

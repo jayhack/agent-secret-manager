@@ -10,10 +10,10 @@ Use the `agent-secrets` CLI whenever a task needs a secret value that is not alr
 ## Workflow
 
 1. Identify the required env var names from errors, docs, `.env.example`, or project config.
-2. Request them with `npx agent-secrets request` and provide a concrete reason:
+2. Request them with `npx @jayhack/agent-secrets request` and provide a concrete reason:
 
    ```sh
-   npx agent-secrets request OPENAI_API_KEY --reason "Run the local OpenAI example"
+   npx @jayhack/agent-secrets request OPENAI_API_KEY --reason "Run the local OpenAI example"
    ```
 
 3. Tell the user to complete the localhost form if the CLI has not opened a browser automatically.
@@ -21,13 +21,13 @@ Use the `agent-secrets` CLI whenever a task needs a secret value that is not alr
 5. Verify presence only:
 
    ```sh
-   npx agent-secrets check OPENAI_API_KEY
+   npx @jayhack/agent-secrets check OPENAI_API_KEY
    ```
 
 6. Run commands normally if the project loads `.env`; otherwise inject the file without printing values:
 
    ```sh
-   npx agent-secrets run -- npm test
+   npx @jayhack/agent-secrets run -- npm test
    ```
 
 ## Structured Requests
@@ -54,13 +54,13 @@ For multiple secrets or clearer labels, write a request spec that contains no va
 Then run:
 
 ```sh
-npx agent-secrets request --from secrets.request.json
+npx @jayhack/agent-secrets request --from secrets.request.json
 ```
 
 ## Rules
 
 - Never print, echo, cat, grep, screenshot, or summarize secret values.
-- Prefer `agent-secrets check` over reading `.env`.
-- Prefer `agent-secrets run -- <command>` when a command needs env vars but the project does not load `.env` itself.
+- Prefer `npx @jayhack/agent-secrets check` over reading `.env`.
+- Prefer `npx @jayhack/agent-secrets run -- <command>` when a command needs env vars but the project does not load `.env` itself.
 - It is acceptable to read `.env.example` because it should contain only blank placeholders.
 - Treat `.env`, `.env.*`, and `.agent-secrets/` as local secret storage and do not commit them.

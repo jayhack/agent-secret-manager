@@ -1,13 +1,13 @@
-# agent-secrets
+# @jayhack/agent-secrets
 
 Agent-native secret requests for local projects.
 
-`agent-secrets` gives coding agents a structured way to ask a human for API keys without pasting values into chat or terminal output. The CLI starts a localhost form, the human enters the value, and the CLI writes it into a local `.env` file with private file permissions.
+`@jayhack/agent-secrets` gives coding agents a structured way to ask a human for API keys without pasting values into chat or terminal output. The CLI starts a localhost form, the human enters the value, and the CLI writes it into a local `.env` file with private file permissions. The installed binary is `agent-secrets`.
 
 ## Quick start
 
 ```sh
-npx agent-secrets request OPENAI_API_KEY --reason "Run the local OpenAI example"
+npx @jayhack/agent-secrets request OPENAI_API_KEY --reason "Run the local OpenAI example"
 ```
 
 The command prints and opens a localhost URL. After the form is submitted:
@@ -20,13 +20,13 @@ The command prints and opens a localhost URL. After the form is submitted:
 Verify without printing values:
 
 ```sh
-npx agent-secrets check OPENAI_API_KEY
+npx @jayhack/agent-secrets check OPENAI_API_KEY
 ```
 
 Run a command with the env file loaded:
 
 ```sh
-npx agent-secrets run -- npm test
+npx @jayhack/agent-secrets run -- npm test
 ```
 
 ## Structured requests
@@ -53,7 +53,7 @@ Agents can create a request spec with no secret values:
 Then run:
 
 ```sh
-npx agent-secrets request --from secrets.request.json
+npx @jayhack/agent-secrets request --from secrets.request.json
 ```
 
 ## Commands
@@ -77,7 +77,7 @@ The package includes a Codex skill in `skills/agent-secrets`.
 Install it from an npm install:
 
 ```sh
-npx agent-secrets skill install
+npx @jayhack/agent-secrets skill install
 ```
 
 The skill tells agents to request missing secrets through this CLI, verify only presence, and avoid opening or printing the `.env` contents.

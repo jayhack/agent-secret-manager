@@ -1,5 +1,5 @@
 {
-  "name": "agent-secrets",
+  "name": "@jayhack/agent-secrets",
   "version": "0.1.0",
   "description": "Agent-native local secret request CLI and bundled Codex skill.",
   "type": "module",
