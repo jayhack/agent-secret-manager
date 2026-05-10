@@ -15,6 +15,20 @@ function sendHtml(response, statusCode, html) {
   response.end(html);
 }
 
+function sendJson(response, statusCode, data) {
+  response.writeHead(statusCode, {
+    "content-type": "application/json; charset=utf-8",
+    "cache-control": "no-store",
+    "connection": "close"
+  });
+  response.end(JSON.stringify(data));
+}
+
+function wantsJson(request) {
+  const accept = request.headers.accept || "";
+  return accept.includes("application/json");
+}
+
 function readBody(request) {
   return new Promise((resolve, reject) => {
     let body = "";
@@ -97,13 +111,18 @@ export async function runSecretRequestServer({ cwd, spec, openBrowser = true, ti
             const hasExisting = existingValues.has(secret.name) && existingValues.get(secret.name) !== "";
 
             if (!value && !hasExisting && secret.required !== false) {
-              sendHtml(response, 400, renderRequestPage({
-                spec,
-                token,
-                existingValues,
-                storage,
-                error: `${secret.name} is required.`
-              }));
+              const errorMessage = `${secret.name} is required.`;
+              if (wantsJson(request)) {
+                sendJson(response, 400, { error: errorMessage });
+              } else {
+                sendHtml(response, 400, renderRequestPage({
+                  spec,
+                  token,
+                  existingValues,
+                  storage,
+                  error: errorMessage
+                }));
+              }
               return;
             }
 
@@ -125,11 +144,18 @@ export async function runSecretRequestServer({ cwd, spec, openBrowser = true, ti
 
           const savedNames = Object.keys(updates);
           response.on("finish", closeServer);
-          sendHtml(response, 200, renderSuccessPage({
-            spec,
-            storage,
-            savedNames: savedNames.length ? savedNames : spec.secrets.map((secret) => secret.name)
-          }));
+          if (wantsJson(request)) {
+            sendJson(response, 200, {
+              ok: true,
+              saved: savedNames.length ? savedNames : spec.secrets.map((secret) => secret.name)
+            });
+          } else {
+            sendHtml(response, 200, renderSuccessPage({
+              spec,
+              storage,
+              savedNames: savedNames.length ? savedNames : spec.secrets.map((secret) => secret.name)
+            }));
+          }
           resolve({ savedNames, envPath });
           return;
         }
