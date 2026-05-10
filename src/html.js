@@ -54,6 +54,21 @@ function secretField(secret, index, isOnly) {
   `;
 }
 
+const FAVICON_DATA_URI = "data:image/svg+xml;utf8," + encodeURIComponent(
+  `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">` +
+  `<defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1">` +
+  `<stop offset="0%" stop-color="#6f5cff"/>` +
+  `<stop offset="100%" stop-color="#b48bff"/>` +
+  `</linearGradient></defs>` +
+  `<path d="M10 14V10a6 6 0 0 1 12 0v4" fill="none" stroke="url(#g)" stroke-width="3" stroke-linecap="round"/>` +
+  `<rect x="6" y="14" width="20" height="14" rx="3.5" fill="url(#g)"/>` +
+  `<circle cx="16" cy="20" r="2.2" fill="#ffffff"/>` +
+  `<path d="M16 20v3.5" stroke="#ffffff" stroke-width="2" stroke-linecap="round"/>` +
+  `</svg>`
+);
+
+const FAVICON_LINK = `<link rel="icon" type="image/svg+xml" href="${FAVICON_DATA_URI}" />`;
+
 const SHARED_BASE_STYLES = `
   *,
   *::before,
@@ -97,16 +112,12 @@ const SHARED_BASE_STYLES = `
   .logo-mark {
     width: 28px;
     height: 28px;
-    border-radius: 8px;
-    background: linear-gradient(135deg, #6f5cff 0%, #8a6cff 50%, #b48bff 100%);
-    box-shadow: 0 4px 14px rgba(111, 92, 255, 0.32), inset 0 1px 0 rgba(255, 255, 255, 0.4);
     display: grid;
     place-items: center;
-    color: white;
-    font-size: 13px;
-    font-weight: 700;
-    letter-spacing: 0;
+    filter: drop-shadow(0 4px 14px rgba(111, 92, 255, 0.28));
   }
+
+  .logo-mark svg { display: block; width: 100%; height: 100%; }
 `;
 
 export function renderRequestPage({ spec, token, existingValues, storage, error = "" }) {
@@ -116,6 +127,9 @@ export function renderRequestPage({ spec, token, existingValues, storage, error 
   }));
   const isOnly = secrets.length === 1;
   const action = `/submit?token=${encodeURIComponent(token)}`;
+  const secretNames = secrets.map((secret) => secret.name);
+  const titleLead = isOnly ? secretNames[0] : `${secretNames.length} secrets`;
+  const pageTitle = [titleLead, spec.title].filter(Boolean).join(" · ");
 
   return `<!doctype html>
 <html lang="en">
@@ -124,7 +138,8 @@ export function renderRequestPage({ spec, token, existingValues, storage, error 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="color-scheme" content="light" />
   <meta name="robots" content="noindex" />
-  <title>${escapeHtml(spec.title)}</title>
+  <title>${escapeHtml(pageTitle)}</title>
+  ${FAVICON_LINK}
   <link rel="preconnect" href="https://rsms.me" crossorigin>
   <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
   <style>
@@ -534,7 +549,20 @@ export function renderRequestPage({ spec, token, existingValues, storage, error 
   <main>
     <div class="topbar">
       <a class="logo" href="https://agent-secret-manager.com" target="_blank" rel="noopener">
-        <span class="logo-mark">SM</span>
+        <span class="logo-mark" aria-hidden="true">
+          <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="logo-grad-req" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#6f5cff"/>
+                <stop offset="100%" stop-color="#b48bff"/>
+              </linearGradient>
+            </defs>
+            <path d="M10 14V10a6 6 0 0 1 12 0v4" fill="none" stroke="url(#logo-grad-req)" stroke-width="3" stroke-linecap="round"/>
+            <rect x="6" y="14" width="20" height="14" rx="3.5" fill="url(#logo-grad-req)"/>
+            <circle cx="16" cy="20" r="2.2" fill="#ffffff"/>
+            <path d="M16 20v3.5" stroke="#ffffff" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </span>
         <span>agent-secret-manager</span>
       </a>
     </div>
@@ -679,6 +707,7 @@ export function renderSuccessPage({ spec, savedNames, storage }) {
   <meta name="color-scheme" content="light" />
   <meta name="robots" content="noindex" />
   <title>Saved</title>
+  ${FAVICON_LINK}
   <link rel="preconnect" href="https://rsms.me" crossorigin>
   <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
   <style>

@@ -1,6 +1,12 @@
+<p align="center">
+  <a href="https://agent-secret-manager.com">
+    <img src="assets/header.png" alt="agent-secret-manager — securely share secrets with coding agents" width="100%" />
+  </a>
+</p>
+
 # agent-secret-manager
 
-Agent-native secret requests for local projects.
+Agent-native secret requests for local projects. <a href="https://agent-secret-manager.com">agent-secret-manager.com</a>
 
 `agent-secret-manager` gives coding agents a structured way to ask a human for API keys without pasting values into chat or terminal output. The CLI starts a localhost form, the human enters the value, and the CLI writes it into a local `.env` file with private file permissions.
 
