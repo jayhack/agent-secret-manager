@@ -1,0 +1,36 @@
+{
+  "name": "agent-secrets",
+  "version": "0.1.0",
+  "description": "Agent-native local secret request CLI and bundled Codex skill.",
+  "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jayhack/agent-secrets.git"
+  },
+  "bin": {
+    "agent-secrets": "./bin/agent-secrets.js"
+  },
+  "files": [
+    "bin",
+    "src",
+    "skills",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "check": "node --check bin/agent-secrets.js && node --check src/cli.js && node --check src/env-file.js && node --check src/html.js && node --check src/manifest.js && node --check src/server.js",
+    "test": "node --test"
+  },
+  "keywords": [
+    "agents",
+    "secrets",
+    "dotenv",
+    "env",
+    "cli",
+    "npx"
+  ],
+  "engines": {
+    "node": ">=18.17"
+  },
+  "license": "MIT"
+}
