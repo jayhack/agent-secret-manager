@@ -10,7 +10,7 @@ Use the `agent-secret-manager` CLI whenever a task needs a secret value that is 
 ## Workflow
 
 1. Identify the required env var names from errors, docs, `.env.example`, or project config.
-2. Request them with `npx agent-secret-manager request` and provide a concrete reason:
+2. Request them with `npx agent-secret-manager request` and provide a concrete reason that can be shown to the user:
 
    ```sh
    npx agent-secret-manager request OPENAI_API_KEY --reason "Run the local OpenAI example"
@@ -44,6 +44,7 @@ For multiple secrets or clearer labels, write a request spec that contains no va
     {
       "name": "OPENAI_API_KEY",
       "label": "OpenAI API key",
+      "reason": "The integration tests call OpenAI.",
       "help": "Create a project key in the OpenAI dashboard.",
       "required": true
     }

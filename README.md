@@ -10,7 +10,7 @@ Agent-native secret requests for local projects.
 npx agent-secret-manager request OPENAI_API_KEY --reason "Run the local OpenAI example"
 ```
 
-The command prints and opens a localhost URL. After the form is submitted:
+The command prints and opens a localhost URL. The `--reason` text is shown in the form so the human can see why the agent is asking. After the form is submitted:
 
 - `.env` contains the secret value.
 - `.env.example` contains blank keys for agent-readable setup.
@@ -43,6 +43,7 @@ Agents can create a request spec with no secret values:
     {
       "name": "OPENAI_API_KEY",
       "label": "OpenAI API key",
+      "reason": "The integration tests call OpenAI.",
       "help": "Create a project key in the OpenAI dashboard.",
       "required": true
     }

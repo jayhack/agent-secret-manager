@@ -115,6 +115,7 @@ function normalizeSecret(secret) {
     name: secret.name,
     label: secret.label || envLabel(secret.name),
     help: secret.help || "",
+    reason: secret.reason || "",
     placeholder: secret.placeholder || "",
     required: secret.required !== false
   };

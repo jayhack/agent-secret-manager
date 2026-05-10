@@ -1,6 +1,6 @@
 {
   "name": "agent-secret-manager",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Agent-native local secret request CLI and bundled Codex skill.",
   "type": "module",
   "repository": {

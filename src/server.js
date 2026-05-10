@@ -3,13 +3,14 @@ import { spawn } from "node:child_process";
 import { randomBytes } from "node:crypto";
 import { URL } from "node:url";
 import { readEnvValues, resolveProjectPath, ensureGitignore, updateEnvExample, upsertEnvValues } from "./env-file.js";
-import { updateManifest } from "./manifest.js";
+import { manifestPath, updateManifest } from "./manifest.js";
 import { renderRequestPage, renderSuccessPage } from "./html.js";
 
 function sendHtml(response, statusCode, html) {
   response.writeHead(statusCode, {
     "content-type": "text/html; charset=utf-8",
-    "cache-control": "no-store"
+    "cache-control": "no-store",
+    "connection": "close"
   });
   response.end(html);
 }
@@ -48,9 +49,26 @@ export async function runSecretRequestServer({ cwd, spec, openBrowser = true, ti
   const token = randomBytes(24).toString("base64url");
   const envPath = resolveProjectPath(cwd, spec.envFile);
   const examplePath = resolveProjectPath(cwd, spec.exampleFile || ".env.example");
+  const storage = { envPath, examplePath, manifestPath: manifestPath(cwd) };
   let existingValues = await readEnvValues(envPath);
   let server;
   let timeout;
+  const sockets = new Set();
+
+  function closeServer() {
+    if (timeout) {
+      clearTimeout(timeout);
+      timeout = undefined;
+    }
+    if (server) {
+      server.close(() => {});
+    }
+    setTimeout(() => {
+      for (const socket of sockets) {
+        socket.destroy();
+      }
+    }, 50).unref();
+  }
 
   const result = await new Promise((resolve, reject) => {
     server = http.createServer(async (request, response) => {
@@ -64,7 +82,7 @@ export async function runSecretRequestServer({ cwd, spec, openBrowser = true, ti
         const parsed = new URL(request.url || "/", "http://127.0.0.1");
         if (request.method === "GET" && parsed.pathname === "/") {
           existingValues = await readEnvValues(envPath);
-          sendHtml(response, 200, renderRequestPage({ spec, token, existingValues }));
+          sendHtml(response, 200, renderRequestPage({ spec, token, existingValues, storage }));
           return;
         }
 
@@ -83,6 +101,7 @@ export async function runSecretRequestServer({ cwd, spec, openBrowser = true, ti
                 spec,
                 token,
                 existingValues,
+                storage,
                 error: `${secret.name} is required.`
               }));
               return;
@@ -105,22 +124,28 @@ export async function runSecretRequestServer({ cwd, spec, openBrowser = true, ti
           }
 
           const savedNames = Object.keys(updates);
+          response.on("finish", closeServer);
           sendHtml(response, 200, renderSuccessPage({
             spec,
+            storage,
             savedNames: savedNames.length ? savedNames : spec.secrets.map((secret) => secret.name)
           }));
           resolve({ savedNames, envPath });
-          setTimeout(() => server.close(), 25);
           return;
         }
 
         response.writeHead(404, { "content-type": "text/plain; charset=utf-8" });
         response.end("Not found\n");
       } catch (error) {
+        closeServer();
         reject(error);
       }
     });
 
+    server.on("connection", (socket) => {
+      sockets.add(socket);
+      socket.on("close", () => sockets.delete(socket));
+    });
     server.on("error", reject);
     server.listen(spec.port || 0, "127.0.0.1", () => {
       const address = server.address();
@@ -135,14 +160,12 @@ export async function runSecretRequestServer({ cwd, spec, openBrowser = true, ti
       timeout = setTimeout(() => {
         const error = new Error(`Timed out waiting for secrets after ${timeoutSeconds} seconds.`);
         error.exitCode = 124;
+        closeServer();
         reject(error);
-        server.close();
       }, timeoutSeconds * 1000);
     }
   });
 
-  if (timeout) {
-    clearTimeout(timeout);
-  }
+  closeServer();
   return result;
 }
