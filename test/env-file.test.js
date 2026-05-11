@@ -1,4 +1,4 @@
-import { mkdtemp, readFile, stat } from "node:fs/promises";
+import { mkdtemp, readFile, stat, symlink } from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import test from "node:test";
@@ -33,6 +33,41 @@ test("upsertEnvValues updates existing keys and appends missing keys", async () 
   if (process.platform !== "win32") {
     assert.equal((await stat(envPath)).mode & 0o777, 0o600);
   }
+});
+
+test("readEnvValues rejects symlinked env files", async (t) => {
+  if (process.platform === "win32") {
+    t.skip("Symlink behavior varies by Windows permissions.");
+  }
+
+  const dir = await mkdtemp(path.join(os.tmpdir(), "agent-secret-manager-"));
+  const targetPath = path.join(dir, "agent-visible.txt");
+  const envPath = path.join(dir, ".env");
+  await upsertEnvValues(targetPath, { OPENAI_API_KEY: "visible" });
+  await symlink(targetPath, envPath);
+
+  await assert.rejects(
+    readEnvValues(envPath),
+    /Refusing to use symlinked env file/
+  );
+});
+
+test("upsertEnvValues rejects symlinked env files", async (t) => {
+  if (process.platform === "win32") {
+    t.skip("Symlink behavior varies by Windows permissions.");
+  }
+
+  const dir = await mkdtemp(path.join(os.tmpdir(), "agent-secret-manager-"));
+  const targetPath = path.join(dir, "agent-visible.txt");
+  const envPath = path.join(dir, ".env");
+  await upsertEnvValues(targetPath, { OPENAI_API_KEY: "visible" });
+  await symlink(targetPath, envPath);
+
+  await assert.rejects(
+    upsertEnvValues(envPath, { OPENAI_API_KEY: "hidden" }),
+    /Refusing to use symlinked env file/
+  );
+  assert.doesNotMatch(await readFile(targetPath, "utf8"), /hidden/);
 });
 
 test("updateEnvExample adds blank keys without secret values", async () => {
