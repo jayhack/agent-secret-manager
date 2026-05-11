@@ -218,8 +218,8 @@
 
     .demo-grid {
       display: grid;
-      grid-template-columns: minmax(0, 0.45fr) minmax(0, 0.55fr);
-      gap: 32px;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: 48px;
       align-items: center;
     }
 
@@ -240,24 +240,23 @@
 
     .demo-steps {
       list-style: none;
-      counter-reset: step;
       margin: 24px 0 0;
       padding: 0;
-      display: grid;
-      gap: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
     }
 
     .demo-steps li {
-      counter-increment: step;
-      display: grid;
-      grid-template-columns: 28px 1fr;
+      display: flex;
+      align-items: flex-start;
       gap: 12px;
-      align-items: baseline;
       color: var(--ink-2);
+      line-height: 1.5;
     }
 
-    .demo-steps li::before {
-      content: counter(step);
+    .demo-steps .num {
+      flex: 0 0 auto;
       width: 24px;
       height: 24px;
       border-radius: 999px;
@@ -267,7 +266,27 @@
       color: var(--indigo-2);
       font-size: 0.78rem;
       font-weight: 600;
-      align-self: center;
+      margin-top: 2px;
+    }
+
+    .demo-steps .desc {
+      flex: 1 1 auto;
+      min-width: 0;
+    }
+
+    p code,
+    li code,
+    .desc code {
+      display: inline-block;
+      padding: 0 6px;
+      border-radius: 5px;
+      background: rgba(111, 92, 255, 0.08);
+      border: 1px solid rgba(111, 92, 255, 0.14);
+      color: var(--indigo-2);
+      font: 500 0.86em/1.55 "JetBrains Mono", "SF Mono", ui-monospace, Menlo, Consolas, monospace;
+      letter-spacing: 0;
+      white-space: nowrap;
+      vertical-align: baseline;
     }
 
     /* Mock card (replica of the request UI) */
@@ -688,15 +707,14 @@
     <section class="demo">
       <div class="wrap demo-grid">
         <div class="demo-side">
-          <h2>One paste. Then close the tab.</h2>
-          <p>The agent runs the CLI. Your browser opens to a single, focused form. You paste your secret and press Enter. The tab closes itself.</p>
-          <p>Behind the scenes, the value is written to <code>.env</code> with private file permissions. The agent process gets back a presence check — nothing more.</p>
-          <ol class="demo-steps">
-            <li>Agent runs <code>request OPENAI_API_KEY</code></li>
-            <li>You see this form. You paste.</li>
-            <li>Saved to <code>.env</code>. Tab closes.</li>
-            <li>Agent calls <code>check OPENAI_API_KEY</code> — gets "present".</li>
-          </ol>
+          <h2>One paste. Then the tab closes.</h2>
+          <p>The agent runs the CLI. Your browser opens to a focused form. You paste, press Enter, the tab closes itself — the value lands in <code>.env</code> with private file permissions, and the agent only ever gets back a presence check.</p>
+          <ul class="demo-steps">
+            <li><span class="num" aria-hidden="true">1</span><span class="desc">Agent runs <code>request OPENAI_API_KEY</code></span></li>
+            <li><span class="num" aria-hidden="true">2</span><span class="desc">You see this form. You paste.</span></li>
+            <li><span class="num" aria-hidden="true">3</span><span class="desc">Saved to <code>.env</code>. Tab closes.</span></li>
+            <li><span class="num" aria-hidden="true">4</span><span class="desc">Agent calls <code>check OPENAI_API_KEY</code>, gets "present".</span></li>
+          </ul>
         </div>
 
         <div class="mock" aria-hidden="true">
