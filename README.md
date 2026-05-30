@@ -16,9 +16,9 @@ Agent-native secret requests for local projects. <a href="https://agent-secret-m
 npx agent-secret-manager request OPENAI_API_KEY --reason "Run the local OpenAI example"
 ```
 
-The command prints and opens a localhost URL. The `--reason` text is shown in the form so the human can see why the agent is asking. After the form is submitted:
+The command prints and opens a localhost URL. The `--reason` text is shown in the form so the human can see why the agent is asking. The human can paste any values they have and leave the rest blank. After the form is submitted:
 
-- `.env` contains the secret value.
+- `.env` contains submitted secret values.
 - `.env.example` contains blank keys for agent-readable setup.
 - `.gitignore` ignores `.env`, `.env.*`, and `.agent-secret-manager/`.
 - `.agent-secret-manager/manifest.json` records metadata only, never values.
@@ -50,12 +50,19 @@ Agents can create a request spec with no secret values:
       "name": "OPENAI_API_KEY",
       "label": "OpenAI API key",
       "reason": "The integration tests call OpenAI.",
-      "help": "Create a project key in the OpenAI dashboard.",
-      "required": true
+      "help": "Create a project key in the OpenAI dashboard."
+    },
+    {
+      "name": "PROJECT_NAME",
+      "label": "Project name",
+      "help": "Shown in plain text — not a credential.",
+      "hidden": false
     }
   ]
 }
 ```
+
+Use `"required": true` only when the form must block submission until that value is provided. Secrets default to optional masked inputs.
 
 Then run:
 

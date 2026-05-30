@@ -34,7 +34,8 @@ export async function updateManifest(cwd, { envFile, secrets, reason }) {
       name: secret.name,
       label: secret.label || secret.name,
       envFile,
-      required: secret.required !== false,
+      required: secret.required === true,
+      hidden: secret.hidden !== false,
       reason: reason || "",
       updatedAt
     };
