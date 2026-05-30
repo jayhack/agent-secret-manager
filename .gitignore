@@ -16,3 +16,5 @@ coverage/
 
 # macOS
 .DS_Store
+
+# agent-secret-manager

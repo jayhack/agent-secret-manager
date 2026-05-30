@@ -31,3 +31,23 @@ test("buildRequestSpec preserves per-secret explanation metadata", async () => {
   assert.equal(spec.secrets[0].help, "Use the local development database URL.");
   assert.equal(spec.secrets[0].placeholder, "postgres://...");
 });
+
+test("buildRequestSpec defaults hidden to true and accepts hidden false", async () => {
+  const defaultSpec = await buildRequestSpec(process.cwd(), { _: ["OPENAI_API_KEY"] });
+  assert.equal(defaultSpec.secrets[0].hidden, true);
+
+  const visibleSpec = await buildRequestSpec(process.cwd(), {
+    _: [{ name: "PROJECT_NAME", hidden: false }]
+  });
+  assert.equal(visibleSpec.secrets[0].hidden, false);
+});
+
+test("buildRequestSpec makes requested secrets optional unless required is explicit", async () => {
+  const defaultSpec = await buildRequestSpec(process.cwd(), { _: ["OPENAI_API_KEY"] });
+  assert.equal(defaultSpec.secrets[0].required, false);
+
+  const requiredSpec = await buildRequestSpec(process.cwd(), {
+    _: [{ name: "DATABASE_URL", required: true }]
+  });
+  assert.equal(requiredSpec.secrets[0].required, true);
+});

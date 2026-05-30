@@ -1,6 +1,6 @@
 {
   "name": "agent-secret-manager",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Agent-native local secret request CLI and bundled Codex skill.",
   "type": "module",
   "repository": {
@@ -8,7 +8,7 @@
     "url": "git+https://github.com/jayhack/agent-secret-manager.git"
   },
   "bin": {
-    "agent-secret-manager": "./bin/agent-secret-manager.js"
+    "agent-secret-manager": "bin/agent-secret-manager.js"
   },
   "files": [
     "bin",

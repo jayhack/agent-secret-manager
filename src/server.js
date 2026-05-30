@@ -104,13 +104,15 @@ export async function runSecretRequestServer({ cwd, spec, openBrowser = true, ti
           const params = new URLSearchParams(await readBody(request));
           existingValues = await readEnvValues(envPath);
           const updates = {};
+          const keptNames = [];
+          const skippedNames = [];
 
           for (let index = 0; index < spec.secrets.length; index += 1) {
             const secret = spec.secrets[index];
             const value = params.get(`secret_${index}`) || "";
             const hasExisting = existingValues.has(secret.name) && existingValues.get(secret.name) !== "";
 
-            if (!value && !hasExisting && secret.required !== false) {
+            if (!value && !hasExisting && secret.required === true) {
               const errorMessage = `${secret.name} is required.`;
               if (wantsJson(request)) {
                 sendJson(response, 400, { error: errorMessage });
@@ -128,6 +130,10 @@ export async function runSecretRequestServer({ cwd, spec, openBrowser = true, ti
 
             if (value) {
               updates[secret.name] = value;
+            } else if (hasExisting) {
+              keptNames.push(secret.name);
+            } else {
+              skippedNames.push(secret.name);
             }
           }
 
@@ -147,16 +153,20 @@ export async function runSecretRequestServer({ cwd, spec, openBrowser = true, ti
           if (wantsJson(request)) {
             sendJson(response, 200, {
               ok: true,
-              saved: savedNames.length ? savedNames : spec.secrets.map((secret) => secret.name)
+              saved: savedNames,
+              kept: keptNames,
+              skipped: skippedNames
             });
           } else {
             sendHtml(response, 200, renderSuccessPage({
               spec,
               storage,
-              savedNames: savedNames.length ? savedNames : spec.secrets.map((secret) => secret.name)
+              savedNames,
+              keptNames,
+              skippedNames
             }));
           }
-          resolve({ savedNames, envPath });
+          resolve({ savedNames, keptNames, skippedNames, envPath });
           return;
         }
 

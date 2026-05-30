@@ -103,7 +103,7 @@ function envLabel(name) {
 function normalizeSecret(secret) {
   if (typeof secret === "string") {
     assertEnvName(secret);
-    return { name: secret, label: envLabel(secret), required: true };
+    return { name: secret, label: envLabel(secret), required: false, hidden: true };
   }
 
   if (!secret || typeof secret !== "object") {
@@ -117,7 +117,8 @@ function normalizeSecret(secret) {
     help: secret.help || "",
     reason: secret.reason || "",
     placeholder: secret.placeholder || "",
-    required: secret.required !== false
+    required: secret.required === true,
+    hidden: secret.hidden !== false
   };
 }
 
@@ -175,8 +176,17 @@ async function requestCommand(args) {
     }
   });
 
-  const names = result.savedNames.length ? result.savedNames : spec.secrets.map((secret) => secret.name);
-  console.log(`Saved: ${names.join(", ")}`);
+  if (result.savedNames.length > 0) {
+    console.log(`Saved: ${result.savedNames.join(", ")}`);
+  } else {
+    console.log("Saved: none");
+  }
+  if (result.keptNames.length > 0) {
+    console.log(`Kept existing: ${result.keptNames.join(", ")}`);
+  }
+  if (result.skippedNames.length > 0) {
+    console.log(`Skipped: ${result.skippedNames.join(", ")}`);
+  }
   console.log("Next: run `" + NPX_COMMAND + " check " + spec.secrets.map((secret) => secret.name).join(" ") + "` to verify presence without printing values.");
 }
 

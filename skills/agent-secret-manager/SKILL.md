@@ -17,7 +17,7 @@ Use the `agent-secret-manager` CLI whenever a task needs a secret value that is 
    ```
 
 3. Tell the user to complete the localhost form if the CLI has not opened a browser automatically.
-4. Wait for the command to finish. Do not ask the user to paste the value into chat.
+4. Wait for the command to finish. The user may submit only some requested values. Do not ask the user to paste the value into chat.
 5. Verify presence only:
 
    ```sh
@@ -45,12 +45,18 @@ For multiple secrets or clearer labels, write a request spec that contains no va
       "name": "OPENAI_API_KEY",
       "label": "OpenAI API key",
       "reason": "The integration tests call OpenAI.",
-      "help": "Create a project key in the OpenAI dashboard.",
-      "required": true
+      "help": "Create a project key in the OpenAI dashboard."
+    },
+    {
+      "name": "PROJECT_NAME",
+      "label": "Project name",
+      "hidden": false
     }
   ]
 }
 ```
+
+Use `"required": true` only when the form must block submission until that value is provided. Use `"hidden": false` only for non-sensitive configuration (for example project names). Secrets default to optional masked password inputs.
 
 Then run:
 
