@@ -66,6 +66,7 @@ For multiple secrets or clearer labels, create a JSON request spec that contains
 ```json
 {
   "title": "Project secrets",
+  "agent": "codex",
   "reason": "The integration tests call external services.",
   "envFile": ".env",
   "exampleFile": ".env.example",
@@ -86,6 +87,8 @@ For multiple secrets or clearer labels, create a JSON request spec that contains
 ```
 
 Use `"required": true` only when the form must block submission until that value is provided. Use `"hidden": false` only for non-sensitive configuration (for example project names). Secrets default to optional masked password inputs.
+
+Set `"agent"` or pass `--agent <name>` so the browser form names the requesting agent, for example `codex` or `claude`.
 
 ## Benefits
 

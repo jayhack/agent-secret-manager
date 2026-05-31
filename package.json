@@ -1,6 +1,6 @@
 {
   "name": "agent-secret-manager",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "Agent-native local secret request CLI and bundled skills.sh skill.",
   "type": "module",
   "repository": {

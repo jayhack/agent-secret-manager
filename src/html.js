@@ -258,6 +258,7 @@ export function renderRequestPage({ spec, token, existingValues, storage, error 
     present: existingValues.has(secret.name) && existingValues.get(secret.name) !== ""
   }));
   const isOnly = secrets.length === 1;
+  const agentName = spec.agentName || spec.agent || "agent";
   const action = `/submit?token=${encodeURIComponent(token)}`;
 
   return `<!doctype html>
@@ -278,7 +279,11 @@ export function renderRequestPage({ spec, token, existingValues, storage, error 
       z-index: 1;
       width: min(860px, 100% - 32px);
       margin: 0 auto;
-      padding: 34px 0 64px;
+      min-height: 100vh;
+      min-height: 100dvh;
+      display: grid;
+      align-items: center;
+      padding: clamp(24px, 6vh, 72px) 0;
     }
 
     .backdrop-art {
@@ -343,14 +348,34 @@ export function renderRequestPage({ spec, token, existingValues, storage, error 
     }
 
     .request-summary {
-      margin: 0 0 16px;
+      margin: 0 0 18px;
     }
 
     .summary-title {
       margin: 0;
       color: var(--moonlight);
-      font: 700 0.98rem/1.35 "Space Grotesk", "Inter", system-ui, sans-serif;
+      font: 700 1.2rem/1.35 "Space Grotesk", "Inter", system-ui, sans-serif;
       letter-spacing: -0.01em;
+    }
+
+    .summary-agent {
+      color: var(--teal);
+    }
+
+    .summary-copy {
+      max-width: 520px;
+      margin: 7px 0 0;
+      color: var(--muted);
+      font-size: 0.9rem;
+      line-height: 1.45;
+    }
+
+    .summary-copy code {
+      padding: 0;
+      border: 0;
+      background: transparent;
+      color: var(--moonlight);
+      font-size: 0.86em;
     }
 
     .secrets-form {
@@ -757,7 +782,7 @@ export function renderRequestPage({ spec, token, existingValues, storage, error 
     }
 
     @media (max-width: 460px) {
-      main { width: min(100% - 24px, 860px); padding-top: 22px; }
+      main { width: min(100% - 24px, 860px); align-items: start; padding: 22px 0 40px; }
       .card { padding: 24px 18px; }
       .field { padding: 16px; }
       .field-help { flex-basis: 100%; }
@@ -775,7 +800,8 @@ export function renderRequestPage({ spec, token, existingValues, storage, error 
   <main>
     <article class="card">
       <div class="request-summary">
-        <p class="summary-title">Secrets requested by agent</p>
+        <p class="summary-title">Secrets requested by <span class="summary-agent">${escapeHtml(agentName)}</span></p>
+        <p class="summary-copy">Values you enter are stored in <code>.env</code> on this machine. The agent never sees the secret values.</p>
       </div>
 
       ${error ? `<p class="error">${escapeHtml(error)}</p>` : ""}
