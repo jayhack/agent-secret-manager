@@ -68,7 +68,7 @@ test("request page highlights the requesting agent name", () => {
   });
 
   assert.match(html, /Secrets requested by <span class="summary-agent">Codex<\/span>/);
-  assert.match(html, /\.summary-title[\s\S]*?1\.08rem/);
+  assert.match(html, /\.summary-title[\s\S]*?1\.2rem/);
 });
 
 test("request page masks hidden secrets and shows plain text when hidden is false", () => {

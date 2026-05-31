@@ -354,7 +354,7 @@ export function renderRequestPage({ spec, token, existingValues, storage, error 
     .summary-title {
       margin: 0;
       color: var(--moonlight);
-      font: 700 1.08rem/1.35 "Space Grotesk", "Inter", system-ui, sans-serif;
+      font: 700 1.2rem/1.35 "Space Grotesk", "Inter", system-ui, sans-serif;
       letter-spacing: -0.01em;
     }
 
