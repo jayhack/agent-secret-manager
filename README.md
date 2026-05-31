@@ -1,5 +1,5 @@
 <p align="center">
-  <a href="https://agent-secret-manager.com">
+  <a href="https://jayhack.github.io/agent-secret-manager/">
     <img src="assets/header.png" alt="agent-secret-manager — securely share secrets with coding agents" width="100%" />
   </a>
 </p>
@@ -8,7 +8,7 @@
 
 [![skills.sh](https://skills.sh/b/jayhack/agent-secret-manager)](https://skills.sh/jayhack/agent-secret-manager)
 
-Agent-native secret requests for local projects. <a href="https://agent-secret-manager.com">agent-secret-manager.com</a>
+Agent-native secret requests for local projects. <a href="https://jayhack.github.io/agent-secret-manager/">Homepage</a>
 
 `agent-secret-manager` gives coding agents a structured way to ask a human for API keys without pasting values into chat or terminal output. The CLI starts a localhost form, the human enters the value, and the CLI writes it into a local `.env` file with private file permissions.
 

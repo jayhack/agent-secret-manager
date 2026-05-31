@@ -9,8 +9,8 @@
   <meta property="og:title" content="agent-secret-manager" />
   <meta property="og:description" content="Coding agents ask for secrets. You paste them locally. The agent only sees present, skipped, or missing." />
   <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://agent-secret-manager.com" />
-  <link rel="canonical" href="https://agent-secret-manager.com" />
+  <meta property="og:url" content="https://jayhack.github.io/agent-secret-manager/" />
+  <link rel="canonical" href="https://jayhack.github.io/agent-secret-manager/" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
@@ -181,7 +181,7 @@
     .hero {
       position: relative;
       overflow: hidden;
-      padding: 72px 0 80px;
+      padding: 56px 0 72px;
     }
 
     .hero-art {
@@ -222,8 +222,8 @@
       position: relative;
       z-index: 1;
       display: grid;
-      grid-template-columns: minmax(0, 1.05fr) minmax(360px, 0.95fr);
-      gap: 48px;
+      grid-template-columns: minmax(0, 1fr) minmax(320px, 0.9fr);
+      gap: clamp(28px, 4vw, 44px);
       align-items: center;
     }
 
@@ -231,9 +231,9 @@
       display: inline-flex;
       align-items: center;
       gap: 8px;
-      margin: 0 0 22px;
+      margin: 0 0 18px;
       color: var(--teal);
-      font: 700 0.72rem/1.4 "JetBrains Mono", ui-monospace, monospace;
+      font: 700 0.68rem/1.4 "JetBrains Mono", ui-monospace, monospace;
       letter-spacing: 0.16em;
       text-transform: uppercase;
     }
@@ -248,10 +248,10 @@
     }
 
     h1 {
-      font-size: clamp(3.2rem, 9vw, 7.4rem);
-      line-height: 0.92;
-      margin: 0 0 24px;
-      max-width: 780px;
+      font-size: clamp(3rem, 6.6vw, 5.9rem);
+      line-height: 0.95;
+      margin: 0 0 20px;
+      max-width: 680px;
       color: var(--moonlight);
     }
 
@@ -261,8 +261,8 @@
       max-width: 650px;
       margin: 0 0 30px;
       color: var(--muted);
-      font-size: clamp(1.02rem, 1.5vw, 1.16rem);
-      line-height: 1.65;
+      font-size: clamp(0.98rem, 1.25vw, 1.08rem);
+      line-height: 1.58;
     }
 
     .actions {
@@ -326,7 +326,7 @@
     .cmd-card {
       position: relative;
       max-width: 720px;
-      margin: 32px 0 16px;
+      margin: 28px 0 14px;
       overflow: hidden;
       text-align: left;
     }
@@ -377,7 +377,7 @@
     .mock {
       position: relative;
       overflow: hidden;
-      padding: 24px;
+      padding: 22px;
     }
 
     .mock::before {
@@ -416,7 +416,7 @@
     }
 
     .mock h2 {
-      font-size: 2rem;
+      font-size: 1.72rem;
       line-height: 1;
       margin: 0 0 10px;
     }
@@ -424,12 +424,12 @@
     .mock-lead {
       margin: 0 0 18px;
       color: var(--muted);
-      font-size: 0.92rem;
+      font-size: 0.88rem;
       line-height: 1.5;
     }
 
     .mock-field {
-      padding: 14px;
+      padding: 13px;
       border-radius: 6px;
       border: 1px solid var(--hairline);
       background: rgba(11, 7, 18, 0.42);
@@ -480,7 +480,7 @@
     }
 
     .mock-input {
-      height: 48px;
+      height: 44px;
       border-radius: 6px;
       border: 1px solid var(--teal);
       background: var(--basalt-2);
@@ -508,7 +508,7 @@
 
     .mock-button {
       margin-top: 14px;
-      height: 50px;
+      height: 46px;
       width: 100%;
       border-radius: 6px;
       background: var(--teal);
