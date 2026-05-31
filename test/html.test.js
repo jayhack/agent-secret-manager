@@ -51,8 +51,24 @@ test("request page marks secrets optional unless explicitly required", () => {
 
   assert.match(html, /Optional[\s\S]*?OPENAI_API_KEY/);
   assert.match(html, /Required[\s\S]*?DATABASE_URL/);
-  assert.match(html, /Secrets requested by agent/);
+  assert.match(html, /Secrets requested by <span class="summary-agent">agent<\/span>/);
   assert.doesNotMatch(html, /5\s+VARS/);
+});
+
+test("request page highlights the requesting agent name", () => {
+  const html = renderRequestPage({
+    token: "token",
+    existingValues: new Map(),
+    spec: {
+      title: "Project config",
+      agentName: "Codex",
+      reason: "Need project setup values.",
+      secrets: [{ name: "OPENAI_API_KEY", label: "OpenAI API key" }]
+    }
+  });
+
+  assert.match(html, /Secrets requested by <span class="summary-agent">Codex<\/span>/);
+  assert.match(html, /\.summary-title[\s\S]*?1\.08rem/);
 });
 
 test("request page masks hidden secrets and shows plain text when hidden is false", () => {

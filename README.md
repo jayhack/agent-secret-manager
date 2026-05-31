@@ -42,6 +42,7 @@ Agents can create a request spec with no secret values:
 ```json
 {
   "title": "Project secrets",
+  "agent": "codex",
   "reason": "The test suite calls external APIs.",
   "envFile": ".env",
   "exampleFile": ".env.example",
@@ -74,7 +75,7 @@ npx agent-secret-manager request --from secrets.request.json
 
 ```sh
 agent-secret-manager init [--env .env]
-agent-secret-manager request <ENV_NAME...> [--reason text] [--env .env]
+agent-secret-manager request <ENV_NAME...> [--agent codex] [--reason text] [--env .env]
 agent-secret-manager request --from secrets.request.json
 agent-secret-manager check <ENV_NAME...> [--env .env]
 agent-secret-manager list [--env .env]

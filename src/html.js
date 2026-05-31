@@ -258,6 +258,7 @@ export function renderRequestPage({ spec, token, existingValues, storage, error 
     present: existingValues.has(secret.name) && existingValues.get(secret.name) !== ""
   }));
   const isOnly = secrets.length === 1;
+  const agentName = spec.agentName || spec.agent || "agent";
   const action = `/submit?token=${encodeURIComponent(token)}`;
 
   return `<!doctype html>
@@ -353,8 +354,12 @@ export function renderRequestPage({ spec, token, existingValues, storage, error 
     .summary-title {
       margin: 0;
       color: var(--moonlight);
-      font: 700 0.98rem/1.35 "Space Grotesk", "Inter", system-ui, sans-serif;
+      font: 700 1.08rem/1.35 "Space Grotesk", "Inter", system-ui, sans-serif;
       letter-spacing: -0.01em;
+    }
+
+    .summary-agent {
+      color: var(--teal);
     }
 
     .summary-copy {
@@ -795,7 +800,7 @@ export function renderRequestPage({ spec, token, existingValues, storage, error 
   <main>
     <article class="card">
       <div class="request-summary">
-        <p class="summary-title">Secrets requested by agent</p>
+        <p class="summary-title">Secrets requested by <span class="summary-agent">${escapeHtml(agentName)}</span></p>
         <p class="summary-copy">Values you enter are stored in <code>.env</code> on this machine. The agent never sees the secret values.</p>
       </div>
 

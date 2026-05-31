@@ -16,7 +16,7 @@ function printHelp() {
   console.log(`${COMMAND_NAME}
 
 Usage:
-  ${COMMAND_NAME} request <ENV_NAME...> [--reason text] [--env .env]
+  ${COMMAND_NAME} request <ENV_NAME...> [--agent codex] [--reason text] [--env .env]
   ${COMMAND_NAME} request --from secrets.request.json
   ${COMMAND_NAME} check <ENV_NAME...> [--env .env]
   ${COMMAND_NAME} list [--env .env]
@@ -26,6 +26,7 @@ Usage:
   ${COMMAND_NAME} skill install [--codex-home ~/.codex]
 
 Common request options:
+  --agent <name>       Agent name shown in the browser form (default: agent)
   --title <text>       Browser page title
   --reason <text>      Why the agent needs these secrets
   --env <path>         Env file to update (default: .env)
@@ -146,6 +147,7 @@ export async function buildRequestSpec(cwd, options) {
   const secrets = rawSecrets.map(normalizeSecret);
   return {
     title: options.title || fileSpec?.title || "Secrets requested",
+    agentName: options.agent || options.agentName || fileSpec?.agent || fileSpec?.agentName || "agent",
     reason: options.reason || options.why || fileSpec?.reason || "A local agent needs these values to continue setup without seeing the secret contents.",
     envFile: options.env || fileSpec?.envFile || ".env",
     exampleFile: options.example || fileSpec?.exampleFile || ".env.example",
@@ -316,6 +318,7 @@ async function specCommand(args) {
   const secrets = options._.length ? options._ : ["OPENAI_API_KEY"];
   const spec = {
     title: options.title || "Project secrets",
+    agentName: options.agent || options.agentName || "agent",
     reason: options.reason || "Local setup needs these values.",
     envFile: options.env || ".env",
     exampleFile: options.example || ".env.example",
