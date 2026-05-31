@@ -6,6 +6,8 @@
 
 # agent-secret-manager
 
+[![skills.sh](https://skills.sh/b/jayhack/agent-secret-manager)](https://skills.sh/jayhack/agent-secret-manager)
+
 Agent-native secret requests for local projects. <a href="https://agent-secret-manager.com">agent-secret-manager.com</a>
 
 `agent-secret-manager` gives coding agents a structured way to ask a human for API keys without pasting values into chat or terminal output. The CLI starts a localhost form, the human enters the value, and the CLI writes it into a local `.env` file with private file permissions.
@@ -86,9 +88,15 @@ agent-secret-manager skill install
 
 ## Skill distribution
 
-The package includes a Codex skill in `skills/agent-secret-manager`.
+The repo includes a skills.sh-compatible skill in `skills/agent-secret-manager/SKILL.md`. It is a small Markdown/MDX-style instruction file that tells agents to use the `npx agent-secret-manager` commands instead of handling secret values directly.
 
-Install it from an npm install:
+Install from skills.sh / the `skills` CLI:
+
+```sh
+npx skills add jayhack/agent-secret-manager --skill agent-secret-manager
+```
+
+Install it from the npm package into Codex:
 
 ```sh
 npx agent-secret-manager skill install

@@ -1,7 +1,7 @@
 {
   "name": "agent-secret-manager",
   "version": "0.1.2",
-  "description": "Agent-native local secret request CLI and bundled Codex skill.",
+  "description": "Agent-native local secret request CLI and bundled skills.sh skill.",
   "type": "module",
   "repository": {
     "type": "git",
@@ -14,6 +14,7 @@
     "bin",
     "src",
     "skills",
+    "skills.sh.json",
     "README.md",
     "LICENSE"
   ],

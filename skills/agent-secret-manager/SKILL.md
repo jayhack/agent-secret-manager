@@ -1,38 +1,67 @@
 ---
 name: agent-secret-manager
-description: Request local development secrets from the human through the agent-secret-manager CLI without exposing secret values to the agent. Use when a project needs API keys, tokens, passwords, webhooks, database URLs, or other env vars that should be entered by the user, stored locally in .env, checked for presence only, and injected into commands without printing or reading the values.
+description: Use the agent-secret-manager npm CLI to request and manage local development secrets without exposing values to the agent. Trigger when a project needs API keys, tokens, passwords, webhooks, database URLs, or other env vars that should be entered by the human, stored locally in .env, checked only for presence, or injected into local commands.
 ---
 
 # Agent Secret Manager
 
-Use the `agent-secret-manager` CLI whenever a task needs a secret value that is not already configured.
+When setup, tests, migrations, deploy previews, or integrations need secret values, run `agent-secret-manager` through `npx` instead of asking the human to paste values into chat.
+
+## Commands
+
+Request one or more secrets:
+
+```sh
+npx agent-secret-manager request OPENAI_API_KEY --reason "Run the local OpenAI example"
+```
+
+Generate a request spec with no secret values:
+
+```sh
+npx agent-secret-manager spec OPENAI_API_KEY DATABASE_URL > secrets.request.json
+```
+
+Request from a spec:
+
+```sh
+npx agent-secret-manager request --from secrets.request.json
+```
+
+Verify presence without printing values:
+
+```sh
+npx agent-secret-manager check OPENAI_API_KEY
+```
+
+List managed names and present/missing state:
+
+```sh
+npx agent-secret-manager list
+```
+
+Run a command with `.env` loaded:
+
+```sh
+npx agent-secret-manager run -- npm test
+```
+
+Initialize local storage:
+
+```sh
+npx agent-secret-manager init
+```
 
 ## Workflow
 
-1. Identify the required env var names from errors, docs, `.env.example`, or project config.
-2. Request them with `npx agent-secret-manager request` and provide a concrete reason that can be shown to the user:
+1. Identify required env var names from errors, docs, `.env.example`, or project config.
+2. Run `npx agent-secret-manager request ...` with a concrete `--reason` the human can judge.
+3. Let the human complete the localhost form. Do not ask them to paste values into chat.
+4. Wait for the command to finish, then verify with `npx agent-secret-manager check ...`.
+5. If the project does not load `.env` itself, run the needed command through `npx agent-secret-manager run -- <command>`.
 
-   ```sh
-   npx agent-secret-manager request OPENAI_API_KEY --reason "Run the local OpenAI example"
-   ```
+## Request Specs
 
-3. Tell the user to complete the localhost form if the CLI has not opened a browser automatically.
-4. Wait for the command to finish. The user may submit only some requested values. Do not ask the user to paste the value into chat.
-5. Verify presence only:
-
-   ```sh
-   npx agent-secret-manager check OPENAI_API_KEY
-   ```
-
-6. Run commands normally if the project loads `.env`; otherwise inject the file without printing values:
-
-   ```sh
-   npx agent-secret-manager run -- npm test
-   ```
-
-## Structured Requests
-
-For multiple secrets or clearer labels, write a request spec that contains no values:
+For multiple secrets or clearer labels, create a JSON request spec that contains names and instructions only, never values:
 
 ```json
 {
@@ -58,11 +87,14 @@ For multiple secrets or clearer labels, write a request spec that contains no va
 
 Use `"required": true` only when the form must block submission until that value is provided. Use `"hidden": false` only for non-sensitive configuration (for example project names). Secrets default to optional masked password inputs.
 
-Then run:
+## Benefits
 
-```sh
-npx agent-secret-manager request --from secrets.request.json
-```
+- Secret values stay out of prompts, chat transcripts, shell history, terminal logs, and screenshots of the agent session.
+- The human sees a concrete reason before entering each value.
+- The agent can verify `present` or `missing` without reading `.env`.
+- `.env.example` stays useful to the agent because it gets blank placeholders, not secret values.
+- `.agent-secret-manager/manifest.json` stores metadata only.
+- `run -- <command>` injects env vars for tools that do not load `.env` by default.
 
 ## Rules
 
