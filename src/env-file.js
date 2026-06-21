@@ -24,6 +24,20 @@ export async function pathExists(filePath) {
   }
 }
 
+export async function assertNotSymlink(filePath) {
+  try {
+    const stats = await fs.lstat(filePath);
+    if (stats.isSymbolicLink()) {
+      throw new Error(`Refusing to use symlinked env file: ${filePath}`);
+    }
+  } catch (error) {
+    if (error.code === "ENOENT") {
+      return;
+    }
+    throw error;
+  }
+}
+
 export async function chmodPrivate(filePath) {
   try {
     await fs.chmod(filePath, 0o600);
@@ -34,6 +48,7 @@ export async function chmodPrivate(filePath) {
 
 export async function ensurePrivateFile(filePath, initialContent = "") {
   await fs.mkdir(path.dirname(filePath), { recursive: true });
+  await assertNotSymlink(filePath);
   if (!(await pathExists(filePath))) {
     await fs.writeFile(filePath, initialContent, { mode: 0o600 });
   }
@@ -107,6 +122,7 @@ export function parseEnvFileContent(content) {
 }
 
 export async function readEnvValues(filePath) {
+  await assertNotSymlink(filePath);
   if (!(await pathExists(filePath))) {
     return new Map();
   }
@@ -152,6 +168,7 @@ export async function upsertEnvValues(filePath, updates) {
     }
   }
 
+  await assertNotSymlink(filePath);
   await fs.writeFile(filePath, `${lines.join("\n")}\n`, { mode: 0o600 });
   await chmodPrivate(filePath);
   return { filePath, updated: [...updated] };
